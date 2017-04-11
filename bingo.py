@@ -113,7 +113,7 @@ def do_bing_search(num_searches, browser):
         except webbrowser.Error:
             print "Error: No browsers found."
             exit (-1)
-    elif:
+    else:
         try:
             WBROWSER = webbrowser.get(browser)
         except webbrowser.Error:
