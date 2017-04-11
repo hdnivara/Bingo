@@ -20,6 +20,8 @@ API_URL = "https://newsapi.org/v1/articles?apiKey="
 API_SRC = "&source="
 API_KEY = None
 
+WBROWSER = None
+
 NEWS_SOURCES = [
     "abc-news-au",
     "ars-technica",
@@ -53,9 +55,11 @@ def __parse_args():
     parser = argparse.ArgumentParser("Bing! few news headlines.")
 
     parser.add_argument("searches", type=int, nargs='?', default=4,
-                        help="number of Bing!s to be done")
+                        help="number of Bing!s to be done, default=4")
     parser.add_argument("-k", "--key", type=str, required=True,
                         help="NewsAPI key")
+    parser.add_argument("-b", "--browser", type=str, required=False,
+                        help="browser to use, e.g., chrome, safari")
     return parser.parse_args()
 
 
@@ -92,16 +96,31 @@ def bing_search(search_query):
     """ Do a Bing! search on the incoming query. """
     search_query = search_query.encode(encoding="utf-8")
     query = SEARCH_URL + str(search_query).replace(" ", "%20")
-    webbrowser.open_new_tab(query)
+    WBROWSER.open_new_tab(query)
     print query
 
 
-def do_bing_search(num_searches):
+def do_bing_search(num_searches, browser):
     """ Do 'n' Bing! searches on a random news articles. """
+    global WBROWSER
+
     if num_searches == 0:
         return
 
-    webbrowser.open(BING_URL, new=1, autoraise=True)
+    if browser is None:
+        try:
+            WBROWSER = webbrowser.get()
+        except webbrowser.Error:
+            print "Error: No browsers found."
+            exit (-1)
+    elif:
+        try:
+            WBROWSER = webbrowser.get(browser)
+        except webbrowser.Error:
+            print "Error: Browser '%s' not found." % (browser)
+            exit (-1)
+
+    WBROWSER.open(BING_URL, new=1, autoraise=True)
     while num_searches:
         news_src = random.choice(NEWS_SOURCES)
 
@@ -125,7 +144,7 @@ def main():
 
     args = __parse_args()
     API_KEY = args.key
-    do_bing_search(int(args.searches))
+    do_bing_search(int(args.searches), args.browser)
 
 
 if __name__ == "__main__":
