@@ -53,7 +53,7 @@ NEWS_SOURCES = [
 ]
 
 def __parse_args():
-    parser = argparse.ArgumentParser("Bing! few news headlines.")
+    parser = argparse.ArgumentParser(description="Bing! few news headlines.")
 
     parser.add_argument("searches", type=int, nargs='?', default=4,
                         help="number of Bing!s to be done, default=4")
@@ -61,7 +61,14 @@ def __parse_args():
                         help="NewsAPI key")
     parser.add_argument("-b", "--browser", type=str, required=False,
                         help="browser to use, e.g., chrome, safari")
-    return parser.parse_args()
+
+    args = parser.parse_args()
+
+    if args.searches > SEARCH_MAX:
+        err = "Maximum Bing!s supported is %d." % (SEARCH_MAX)
+        raise parser.error(err)
+
+    return args
 
 
 def __news_get(source):
