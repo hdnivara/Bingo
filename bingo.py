@@ -11,6 +11,7 @@ import random
 import time
 import webbrowser
 import requests
+from progress.bar import Bar
 
 SEARCH_MAX = 32
 BING_URL = "https://www.bing.com/"
@@ -67,7 +68,6 @@ def __news_get(source):
     news_url = API_URL + API_KEY + API_SRC + source
 
     try:
-        print news_url
         resp = requests.get(news_url)
     except requests.exceptions.RequestException:
         print "Fetching news feeds failed."
@@ -97,7 +97,6 @@ def bing_search(search_query):
     search_query = search_query.encode(encoding="utf-8")
     query = SEARCH_URL + str(search_query).replace(" ", "%20")
     WBROWSER.open_new_tab(query)
-    print query
 
 
 def do_bing_search(num_searches, browser):
@@ -121,6 +120,8 @@ def do_bing_search(num_searches, browser):
             exit (-1)
 
     WBROWSER.open(BING_URL, new=1, autoraise=True)
+    bar = Bar("Bing!ing", max=num_searches)
+
     while num_searches:
         news_src = random.choice(NEWS_SOURCES)
 
@@ -132,11 +133,13 @@ def do_bing_search(num_searches, browser):
         for each_article in news:
             bing_search(each_article)
 
+            bar.next()
             num_searches -= 1
             if num_searches == 0:
                 break
 
-            time.sleep(2)
+            time.sleep(1)
+        bar.finish()
 
 
 def main():
