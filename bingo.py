@@ -138,6 +138,9 @@ def do_bing_search(num_searches, browser):
             continue
 
         for each_article in news:
+            if each_article is None:
+                continue
+
             bing_search(each_article)
 
             bar.next()
@@ -146,7 +149,7 @@ def do_bing_search(num_searches, browser):
                 break
 
             time.sleep(1)
-        bar.finish()
+    bar.finish()
 
 
 def main():
