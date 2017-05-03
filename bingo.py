@@ -43,8 +43,6 @@ NEWS_SOURCES = [
     "new-york-magazine",
     "recode",
     "reddit-r-all",
-    "sky-news",
-    "sky-sports-news",
     "techcrunch",
     "the-economist",
     "the-guardian-uk",
